@@ -6,11 +6,11 @@ import { CheckCircle2, Award, HeartHandshake, GraduationCap, Cross, Newspaper } 
 import { IMAGES, STATS, CONTACT } from './data'
 
 const TIMELINE = [
-  { icon: GraduationCap, title: 'Sociologia e Criminologia', text: 'La prima laurea, per comprendere l’essere umano nel suo contesto.' },
-  { icon: GraduationCap, title: 'Scienze e Tecniche Psicologiche', text: 'L’incontro con la psicologia come vocazione e metodo.' },
-  { icon: Award, title: 'Laurea in Psicologia — massimo dei voti', text: 'Un percorso completato con dedizione e passione.' },
-  { icon: Award, title: 'Master in Psicologia Investigativa e Forense', text: 'Uno sguardo più profondo sulla complessità umana.' },
-  { icon: Cross, title: 'Volontaria Croce Rossa Italiana · Albo CRI', text: 'Iscritta al SeP, Albo Nazionale Psicologi CRI.' },
+  { icon: GraduationCap, title: 'Sociologia e Criminologia', text: 'Studio dei fenomeni sociali, criminologici e delle dinamiche del comportamento umano.' },
+  { icon: GraduationCap, title: 'Scienze e Tecniche Psicologiche', text: 'Formazione sulle basi teoriche, valutazione psicologica e relazione d’aiuto professionale.' },
+  { icon: Award, title: 'Laurea in Psicologia Clinica', text: 'Approfondimento clinico su diagnosi, benessere psicologico, ascolto e intervento terapeutico.' },
+  { icon: Award, title: 'Master in Psicologia Investigativa e Forense', text: 'Specializzazione in psicologia forense, investigativa, valutazione e consulenza giudiziaria specialistica.' },
+  { icon: Cross, title: 'Volontaria Croce Rossa Italiana · Albo Nazionale Psicologi CRI', text: 'Supporto psicologico nelle emergenze, vulnerabilità, resilienza e interventi umanitari qualificati.' },
 ]
 
 export function About() {
