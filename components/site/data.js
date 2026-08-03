@@ -19,8 +19,8 @@ export const CONTACT = {
 }
 
 export const IMAGES = {
-  hero: 'https://images.unsplash.com/photo-1609469095578-9c017c9007e2?auto=format&fit=crop&w=1920&q=80',
-  about: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=80',
+  hero: 'https://customer-assets-39nsmqrw.emergentagent.net/job_salvia-psicologia/artifacts/4qdkwnvr_WhatsApp%20Image%202026-08-03%20at%2017.30.31.jpeg',
+  about: 'https://customer-assets-39nsmqrw.emergentagent.net/job_salvia-psicologia/artifacts/2da5ww12_WhatsApp%20Image%202026-08-03%20at%2017.30.31%20%281%29.jpeg',
   studio1: 'https://images.unsplash.com/photo-1585128792020-803d29415281?auto=format&fit=crop&w=1200&q=80',
   studio2: 'https://images.unsplash.com/photo-1617214922084-5db8d3c3df5a?auto=format&fit=crop&w=1200&q=80',
   calm: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=80',

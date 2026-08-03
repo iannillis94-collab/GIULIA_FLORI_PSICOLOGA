@@ -3,7 +3,8 @@ import { Providers } from './providers'
 import { Toaster } from '@/components/ui/sonner'
 
 const SITE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://salvia-psicologia.preview.emergentagent.com'
-const OG_IMAGE = 'https://images.unsplash.com/photo-1609469095578-9c017c9007e2?auto=format&fit=crop&w=1200&q=80'
+const OG_IMAGE = 'https://customer-assets-39nsmqrw.emergentagent.net/job_salvia-psicologia/artifacts/4qdkwnvr_WhatsApp%20Image%202026-08-03%20at%2017.30.31.jpeg'
+const PORTRAIT_IMAGE = 'https://customer-assets-39nsmqrw.emergentagent.net/job_salvia-psicologia/artifacts/2da5ww12_WhatsApp%20Image%202026-08-03%20at%2017.30.31%20%281%29.jpeg'
 
 export const metadata = {
   metadataBase: new URL(SITE_URL),
@@ -56,7 +57,7 @@ const jsonLd = {
   '@type': ['Psychologist', 'LocalBusiness'],
   '@id': SITE_URL,
   name: 'Dott.ssa Giulia Flori — Psicologa',
-  image: OG_IMAGE,
+  image: PORTRAIT_IMAGE,
   url: SITE_URL,
   email: 'giuliaflori@hotmail.it',
   description:
