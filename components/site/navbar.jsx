@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useTheme } from 'next-themes'
-import { Menu, Moon, Sun, Leaf } from 'lucide-react'
+import { Menu, Moon, Sun, HeartHandshake } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet'
 import { NAV_LINKS } from './data'
@@ -34,11 +34,11 @@ export function Navbar() {
       >
         <a href="#home" className="flex items-center gap-2.5 group">
           <span className="grid h-9 w-9 place-items-center rounded-full bg-primary text-primary-foreground shadow-soft transition-transform group-hover:scale-105">
-            <Leaf className="h-4.5 w-4.5" strokeWidth={2} />
+            <HeartHandshake className="h-5 w-5" strokeWidth={2} />
           </span>
           <span className="leading-tight">
             <span className={`block font-serif text-lg transition-colors ${scrolled ? 'text-foreground' : 'text-white drop-shadow'}`}>Giulia Flori</span>
-            <span className={`block text-[0.65rem] uppercase tracking-[0.22em] transition-colors ${scrolled ? 'text-muted-foreground' : 'text-white/80'}`}>Psicologa</span>
+            <span className={`block text-[0.6rem] uppercase tracking-[0.1em] transition-colors ${scrolled ? 'text-muted-foreground' : 'text-white/80'}`}>Psicologa iscritta all&rsquo;Albo del Lazio</span>
           </span>
         </a>
 

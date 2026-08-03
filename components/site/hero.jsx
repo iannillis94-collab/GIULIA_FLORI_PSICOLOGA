@@ -35,7 +35,7 @@ export function Hero() {
         <div className="max-w-2xl animate-fade-up" style={{ animationDelay: '0.05s' }}>
           <span className="inline-flex items-center gap-2 rounded-full glass px-4 py-1.5 text-sm text-white ring-1 ring-white/25">
             <ShieldCheck className="h-4 w-4" />
-            Psicologa iscritta all&rsquo;Albo
+            Psicologa iscritta all&rsquo;Albo del Lazio
           </span>
 
           <h1 className="mt-6 font-serif text-4xl font-medium leading-[1.1] text-white drop-shadow-sm sm:text-5xl lg:text-6xl text-balance">

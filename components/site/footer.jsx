@@ -1,6 +1,6 @@
 'use client'
 
-import { Leaf, Instagram, Linkedin, Mail, MessageCircle, BadgeCheck } from 'lucide-react'
+import { HeartHandshake, Instagram, Linkedin, Mail, MessageCircle, BadgeCheck } from 'lucide-react'
 import { NAV_LINKS, CONTACT } from './data'
 
 export function Footer() {
@@ -10,10 +10,10 @@ export function Footer() {
         <div className="grid gap-10 md:grid-cols-4">
           <div className="md:col-span-2">
             <div className="flex items-center gap-2.5">
-              <span className="grid h-9 w-9 place-items-center rounded-full bg-primary text-primary-foreground"><Leaf className="h-4.5 w-4.5" /></span>
+              <span className="grid h-9 w-9 place-items-center rounded-full bg-primary text-primary-foreground"><HeartHandshake className="h-5 w-5" /></span>
               <span className="leading-tight">
                 <span className="block font-serif text-lg text-foreground">Dott.ssa Giulia Flori</span>
-                <span className="block text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">Psicologa · iscritta all’Albo</span>
+                <span className="block text-[0.65rem] uppercase tracking-[0.18em] text-muted-foreground">Psicologa · iscritta all’Albo del Lazio</span>
               </span>
             </div>
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">

@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import {
-  Leaf, Lock, Loader2, LogOut, Trash2, CalendarDays, Clock3, Settings2,
+  HeartHandshake, Lock, Loader2, LogOut, Trash2, CalendarDays, Clock3, Settings2,
   FileText, Inbox, Plus, Pencil, Check, X, Save,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -62,7 +62,7 @@ export default function Admin() {
       <div className="grid min-h-screen place-items-center bg-secondary/30 px-4">
         <form onSubmit={login} className="w-full max-w-sm rounded-3xl border border-border/60 bg-card p-8 shadow-lift">
           <div className="flex items-center gap-2.5">
-            <span className="grid h-10 w-10 place-items-center rounded-full bg-primary text-primary-foreground"><Leaf className="h-5 w-5" /></span>
+            <span className="grid h-10 w-10 place-items-center rounded-full bg-primary text-primary-foreground"><HeartHandshake className="h-5 w-5" /></span>
             <div>
               <p className="font-serif text-lg text-foreground">Area Riservata</p>
               <p className="text-xs text-muted-foreground">Dott.ssa Giulia Flori</p>
@@ -100,7 +100,7 @@ function Dashboard({ token, onLogout }) {
       <header className="sticky top-0 z-20 border-b border-border/60 glass-strong">
         <div className="container flex items-center justify-between py-3">
           <div className="flex items-center gap-2.5">
-            <span className="grid h-9 w-9 place-items-center rounded-full bg-primary text-primary-foreground"><Leaf className="h-4.5 w-4.5" /></span>
+            <span className="grid h-9 w-9 place-items-center rounded-full bg-primary text-primary-foreground"><HeartHandshake className="h-5 w-5" /></span>
             <div>
               <p className="font-serif text-base leading-tight text-foreground">Dashboard</p>
               <p className="text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground">Giulia Flori</p>
