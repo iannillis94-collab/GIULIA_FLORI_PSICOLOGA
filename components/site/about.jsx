@@ -2,7 +2,7 @@
 
 import { Reveal } from './reveal'
 import { Button } from '@/components/ui/button'
-import { CheckCircle2, Award, HeartHandshake, GraduationCap, Cross } from 'lucide-react'
+import { CheckCircle2, Award, HeartHandshake, GraduationCap, Cross, Newspaper } from 'lucide-react'
 import { IMAGES, STATS, CONTACT } from './data'
 
 const TIMELINE = [
@@ -20,23 +20,25 @@ export function About() {
         <div className="grid items-center gap-14 lg:grid-cols-2">
           {/* Image */}
           <Reveal>
-            <div className="relative">
-              <div className="absolute -left-4 -top-4 h-full w-full rounded-[2rem] border border-primary/20" />
+            <div className="relative pb-10 pr-6 md:pb-0 md:pr-0">
+              <div className="absolute -left-4 -top-4 hidden h-[92%] w-[86%] rounded-[2rem] border border-primary/20 md:block" />
               <img
                 src={IMAGES.about}
                 alt="Dott.ssa Giulia Flori, Psicologa"
                 className="relative aspect-[4/5] w-full rounded-[2rem] object-cover shadow-lift"
               />
-              <div className="absolute -bottom-6 -right-2 md:right-6 rounded-2xl glass-strong border border-border/60 p-4 shadow-soft">
-                <div className="flex items-center gap-3">
-                  <div className="grid h-10 w-10 place-items-center rounded-xl bg-primary text-primary-foreground">
-                    <HeartHandshake className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <p className="font-serif text-base leading-tight text-foreground">Accoglienza</p>
-                    <p className="text-xs text-muted-foreground">senza giudizio</p>
-                  </div>
-                </div>
+              {/* Foto collage sovrapposta */}
+              <div className="absolute -bottom-2 right-0 w-28 overflow-hidden rounded-2xl border-4 border-background shadow-lift sm:w-40 md:-bottom-8 md:-right-8">
+                <img
+                  src={IMAGES.portraitStanding}
+                  alt="Dott.ssa Giulia Flori nel suo studio"
+                  className="aspect-[3/4] w-full object-cover"
+                />
+              </div>
+              {/* Chip accoglienza */}
+              <div className="absolute left-3 top-3 inline-flex items-center gap-2 rounded-full glass-strong px-3 py-1.5 shadow-soft">
+                <HeartHandshake className="h-4 w-4 text-primary" />
+                <span className="text-xs font-medium text-foreground">Accoglienza senza giudizio</span>
               </div>
             </div>
           </Reveal>
@@ -84,6 +86,32 @@ export function About() {
               </Button>
             </Reveal>
           </div>
+        </div>
+
+        {/* Come vista su - Press */}
+        <div className="mt-16">
+          <Reveal>
+            <div className="grid items-center gap-6 overflow-hidden rounded-[2rem] border border-border/60 bg-card p-4 shadow-soft sm:grid-cols-[240px_1fr] md:p-6">
+              <img
+                src={IMAGES.press}
+                alt="Dott.ssa Giulia Flori sulla rivista Salute33"
+                className="h-60 w-full rounded-2xl object-cover sm:h-72"
+              />
+              <div className="px-2 pb-3 sm:pb-0">
+                <span className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.2em] text-primary">
+                  <Newspaper className="h-4 w-4" /> Come vista su
+                </span>
+                <h3 className="mt-3 font-serif text-2xl md:text-3xl text-foreground">
+                  Rivista Salute33 &mdash; Rubrica di Psicologia
+                </h3>
+                <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
+                  &ldquo;Lo stress non &egrave; solo nella testa: come impatta davvero sulla nostra
+                  vita.&rdquo; Un contributo divulgativo per raccontare il benessere psicologico con
+                  parole semplici, vicine alle persone e alla loro quotidianit&agrave;.
+                </p>
+              </div>
+            </div>
+          </Reveal>
         </div>
 
         {/* Stats */}

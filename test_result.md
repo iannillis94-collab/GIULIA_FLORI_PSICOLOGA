@@ -198,42 +198,44 @@ backend:
 frontend:
   - task: "Single-page premium site (hero, values, help, about, services, booking, testimonials, blog, faq, contact, footer, whatsapp, cookie)"
     implemented: true
-    working: "NA"
+    working: false
     file: "app/page.js + components/site/*"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
     needs_retesting: false
     status_history:
         -working: "NA"
         -agent: "main"
         -comment: "Built. Hero verified visually. Reveal animations made SSR-resilient. Frontend testing NOT yet authorized by user."
+        -working: false
+        -agent: "testing"
+        -comment: "CRITICAL ISSUE - Booking calendar date selection not working. When user clicks a date, the React state is not updated (selected dates count: 0), no API call to /api/appointments/booked is made, and time slots do not appear. This blocks the entire booking flow. Other sections tested: ✅ Hero headline and CTA buttons visible, ✅ All navbar links present and smooth-scroll works, ✅ All sections render (chi-sono, servizi, blog, faq, contatti), ✅ Blog: 10 articles load, category filters work, article modal opens/closes, ✅ FAQ accordion expands/collapse works, ✅ Testimonials carousel prev/next works, ✅ Contact form submission works (success toast appears), ✅ Cookie banner appears and dismisses correctly, ✅ WhatsApp floating button present with correct link. ⚠️ Dark mode toggle button not found with aria-label='Cambia tema' selector. Console errors: hydration mismatches, 502/500 errors during testing. Network errors: API calls to /api/blog and /api/availability failed intermittently."
 
   - task: "Admin dashboard (login, appointments, availability, blog, messages)"
     implemented: true
-    working: "NA"
+    working: false
     file: "app/admin/page.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
     needs_retesting: false
     status_history:
         -working: "NA"
         -agent: "main"
         -comment: "Built. Not yet tested via UI (awaiting user authorization)."
+        -working: false
+        -agent: "testing"
+        -comment: "CRITICAL ISSUE - Admin page (/admin) returns 502 Bad Gateway error intermittently. Server is memory-constrained (--max-old-space-size=512) and appears to crash/restart during testing. After multiple restarts, the page eventually loads but the issue persists. The Next.js dev server needs more memory allocation or optimization. Backend API endpoints work correctly when tested directly (availability, appointments, blog, contact all return 200 with correct data)."
 
 metadata:
   created_by: "main_agent"
   version: "1.0"
   test_sequence: 1
-  run_ui: false
+  run_ui: true
 
 test_plan:
   current_focus:
-    - "Admin login + token verify"
-    - "Availability GET/PUT (settings collection, admin protected PUT)"
-    - "Appointments create (POST) with slot clash + honeypot + consent validation"
-    - "Appointments list/update/delete (admin) + booked slots public"
-    - "Blog CRUD + auto-seed 10 SEO posts"
-    - "Contact message POST (honeypot + consent) and GET (admin)"
+    - "Single-page premium site (hero, values, help, about, services, booking, testimonials, blog, faq, contact, footer, whatsapp, cookie)"
+    - "Admin dashboard (login, appointments, availability, blog, messages)"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
@@ -243,3 +245,7 @@ agent_communication:
     -message: "Backend completo per il sito della psicologa. Testare tutti gli endpoint /api. Admin password = giulia2025 (POST /api/admin/login -> token), poi usare header x-admin-token con il token restituito per gli endpoint protetti. Verificare: (1) admin login ok/ko, (2) availability GET pubblica + PUT protetta, (3) creazione appuntamento con validazioni + doppia prenotazione 409 + honeypot, (4) booked slots pubblici, (5) list/update/delete appuntamenti protetti, (6) blog GET pubblico (10 articoli seed) + CRUD protetto, (7) contact POST + GET protetta. Usare solo UUID (niente ObjectID)."
     -agent: "testing"
     -message: "✅ BACKEND TESTING COMPLETE: All 34 tests passed (100% success rate). Tested all 6 backend tasks: (1) Admin login/verify - 4/4 passed, (2) Availability GET/PUT - 4/4 passed, (3) Appointments create with validations - 6/6 passed, (4) Appointments admin operations + booked slots - 7/7 passed, (5) Blog CRUD + auto-seed - 6/6 passed, (6) Contact POST/GET - 7/7 passed. All endpoints working correctly: proper authentication (401 for unauthorized), validation (400 for missing fields/consent), honeypot anti-spam (silently rejects without storing), double-booking prevention (409 conflict), UUID format (no Mongo _id leaks), CRUD operations, data persistence. Minor fix applied: isAdmin() now returns explicit boolean. No 500 errors encountered. Backend is production-ready."
+    -agent: "main"
+    -message: "FRONTEND UI TESTING AUTHORIZED by user. Please test the full single-page site + admin dashboard. IMPORTANT: dev server is memory-constrained and restarts occasionally (first load of a route can take 20-30s and may briefly 502 during recompile) - please retry/wait on transient failures. Base URL: use NEXT_PUBLIC_BASE_URL. KEY FLOWS TO TEST: (1) Homepage loads, hero headline + 2 CTA buttons visible, navbar links smooth-scroll to sections. (2) BOOKING (#prenota): pick an available future weekday in the calendar (Mon-Fri enabled; Sat/Sun disabled), available time slots appear, select a slot, fill name/email, select service + modality, tick the GDPR consent checkbox, submit -> on-screen confirmation card appears. Also verify submitting WITHOUT consent shows an error toast. (3) BLOG (#blog): 10 article cards load, category filter chips work, clicking a card opens a modal with full article content. (4) FAQ accordion expands. (5) Testimonials carousel next/prev works. (6) CONTACT (#contatti): fill form + consent + submit -> success toast. (7) WhatsApp floating button present (href wa.me/393793539560). (8) Cookie banner appears and can be accepted. (9) Dark mode toggle in navbar works. (10) ADMIN (/admin): login with password 'giulia2025' -> dashboard; verify Appuntamenti tab lists the booking just created and status can be changed to 'confirmed'; Disponibilita tab loads weekday toggles+slots and Save works; Blog tab lists posts and 'Nuovo articolo' form opens; Messaggi tab lists the contact message. Report any console errors, broken flows, or elements stuck invisible."
+    -agent: "testing"
+    -message: "🔴 FRONTEND UI TESTING COMPLETE - 2 CRITICAL ISSUES FOUND: (1) BOOKING CALENDAR BROKEN: Date selection not working - when user clicks a date, React state is not updated, no API call to /api/appointments/booked is made, time slots do not appear. This completely blocks the booking flow. (2) ADMIN DASHBOARD 502 ERRORS: /admin page returns intermittent 502 Bad Gateway errors due to memory constraints (Next.js server configured with --max-old-space-size=512). Server logs show 'Server is approaching the used memory threshold, restarting...' The /admin route takes 26+ seconds to compile and causes server restarts. ✅ WORKING FEATURES: Hero section, navbar smooth-scroll, all sections render, blog (10 articles, filters, modal), FAQ accordion, testimonials carousel, contact form submission, WhatsApp button, cookie banner. ⚠️ MINOR: Dark mode toggle selector issue (aria-label='Cambia tema' not found). Backend APIs work correctly when tested directly."

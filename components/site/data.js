@@ -19,8 +19,10 @@ export const CONTACT = {
 }
 
 export const IMAGES = {
-  hero: 'https://customer-assets-39nsmqrw.emergentagent.net/job_salvia-psicologia/artifacts/4qdkwnvr_WhatsApp%20Image%202026-08-03%20at%2017.30.31.jpeg',
-  about: 'https://customer-assets-39nsmqrw.emergentagent.net/job_salvia-psicologia/artifacts/2da5ww12_WhatsApp%20Image%202026-08-03%20at%2017.30.31%20%281%29.jpeg',
+  hero: 'https://customer-assets-39nsmqrw.emergentagent.net/job_salvia-psicologia/artifacts/2kr62xj5_WhatsApp%20Image%202026-08-03%20at%2017.30.31.jpeg',
+  about: 'https://customer-assets-39nsmqrw.emergentagent.net/job_salvia-psicologia/artifacts/s0597iii_WhatsApp%20Image%202026-08-03%20at%2017.30.31%20%283%29.jpeg',
+  portraitStanding: 'https://customer-assets-39nsmqrw.emergentagent.net/job_salvia-psicologia/artifacts/jamlrqw7_WhatsApp%20Image%202026-08-03%20at%2017.30.31%20%281%29.jpeg',
+  press: 'https://customer-assets-39nsmqrw.emergentagent.net/job_salvia-psicologia/artifacts/adkk9c63_WhatsApp%20Image%202026-08-03%20at%2017.30.31%20%282%29.jpeg',
   studio1: 'https://images.unsplash.com/photo-1585128792020-803d29415281?auto=format&fit=crop&w=1200&q=80',
   studio2: 'https://images.unsplash.com/photo-1617214922084-5db8d3c3df5a?auto=format&fit=crop&w=1200&q=80',
   calm: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=80',
