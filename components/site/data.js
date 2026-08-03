@@ -8,9 +8,9 @@ export const CONTACT = {
   name: 'Dott.ssa Giulia Flori',
   role: 'Psicologa — iscritta all’Albo',
   email: 'giuliaflori@hotmail.it',
-  // Numero placeholder: sostituire con il numero reale di Giulia
-  phoneDisplay: '+39 000 000 0000',
-  whatsapp: '390000000000',
+  // Numero WhatsApp reale di Giulia Flori
+  phoneDisplay: '+39 379 353 9560',
+  whatsapp: '393793539560',
   instagram: 'https://www.instagram.com/psicologa.giuliaflori/',
   linkedin: 'https://linkedin.com/in/giulia-f-8189bb189',
   albo: 'https://ordinepsicologilazio.it/albo/iscrizione-31876',
