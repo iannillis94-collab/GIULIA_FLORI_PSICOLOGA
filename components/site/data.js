@@ -13,7 +13,7 @@ export const CONTACT = {
   whatsapp: '393793539560',
   instagram: 'https://www.instagram.com/psicologa.giuliaflori/',
   linkedin: 'https://linkedin.com/in/giulia-f-8189bb189',
-  albo: 'https://ordinepsicologilazio.it/albo/iscrizione-31876',
+  albo: 'https://ordinepsicologilazio.it/albo/giulia-flori',
   // Indirizzo studio: placeholder facilmente modificabile
   addressPlaceholder: 'Studio in via di definizione — Roma / Online',
 }

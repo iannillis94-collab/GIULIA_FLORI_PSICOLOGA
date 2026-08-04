@@ -69,7 +69,7 @@ const jsonLd = {
   sameAs: [
     'https://www.instagram.com/psicologa.giuliaflori/',
     'https://linkedin.com/in/giulia-f-8189bb189',
-    'https://ordinepsicologilazio.it/albo/iscrizione-31876',
+    'https://ordinepsicologilazio.it/albo/giulia-flori',
   ],
 }
 

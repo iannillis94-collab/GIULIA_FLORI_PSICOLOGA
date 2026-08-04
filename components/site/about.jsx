@@ -58,25 +58,40 @@ export function About() {
             <Reveal delay={0.1}>
               <div className="mt-6 space-y-4 text-muted-foreground leading-relaxed">
                 <p>
-                  Sono una psicologa iscritta all’Albo, con esperienza in ambito clinico,
-                  riabilitativo ed educativo. Il mio interesse per la sofferenza umana nasce presto:
-                  a 13 anni, grazie al contatto diretto con una comunità psichiatrica in cui lavorava
-                  mia madre, infermiera, ho potuto osservare da vicino la complessità della fragilità
-                  psichica e il valore della cura.
+                  Sono una psicologa iscritta nell&rsquo;Albo del Lazio, con un&rsquo;esperienza che
+                  negli anni si &egrave; costruita attraverso l&rsquo;ambito clinico, riabilitativo ed
+                  educativo. Il mio interesse per la sofferenza umana, per&ograve;, affonda le radici
+                  molto prima dell&rsquo;inizio del mio percorso professionale: a soli tredici anni ho
+                  avuto l&rsquo;opportunit&agrave; di entrare in contatto diretto con una comunit&agrave;
+                  psichiatrica, dove mia madre lavorava come infermiera. Fu l&igrave; che, osservando da
+                  vicino la complessit&agrave; della fragilit&agrave; psichica, cominciai a intuire il
+                  valore autentico della cura.
                 </p>
                 <p>
-                  Da lì è nato un desiderio profondo: comprendere e aiutare chi vive un momento
-                  difficile. Il mio percorso integra sociologia, criminologia e psicologia,
-                  completato con un Master in Psicologia Investigativa e Forense.
+                  Da quell&rsquo;esperienza &egrave; nato un desiderio che non mi ha pi&ugrave;
+                  abbandonata: capire davvero chi vive un momento di difficolt&agrave;, e trovare il modo
+                  per starle accanto. Per seguire questa vocazione ho costruito un percorso di studi che
+                  intreccia sociologia, criminologia e psicologia, completandolo poi con un Master in
+                  Psicologia Investigativa e Forense.
                 </p>
                 <p>
-                  Presso il Centro di Riabilitazione Mentale Mario Gozzano (ASL Roma 2), strutture
-                  psichiatriche e centri diurni, ho lavorato con persone che vivevano ansia,
-                  depressione, trauma, disturbi di personalità, burnout, stress e PTSD.
+                  Nel corso degli anni ho lavorato presso il Centro di Riabilitazione Mentale Mario
+                  Gozzano (ASL Roma 2), oltre che in diverse strutture psichiatriche e centri diurni,
+                  incontrando persone alle prese con ansia, depressione, trauma, disturbi di
+                  personalit&agrave;, burnout, stress e PTSD.
+                </p>
+                <p>
+                  Il mio impegno si &egrave; esteso anche al mondo del volontariato: presso la Croce
+                  Rossa Italiana ricopro il ruolo di psicologa del SEP, occupandomi del supporto emotivo
+                  e della prevenzione del burnout tra i volontari, che quotidianamente si confrontano con
+                  situazioni di forte impatto emotivo. Affianco inoltre l&rsquo;attivit&agrave; come
+                  psicologa dell&rsquo;emergenza, intervenendo nei contesti di crisi per offrire un primo
+                  sostegno psicologico a chi vive momenti di grande vulnerabilit&agrave;.
                 </p>
                 <p className="font-medium text-foreground">
-                  Credo profondamente che ogni persona abbia dentro di sé le risorse per ritrovare
-                  il proprio equilibrio, quando viene accolta senza giudizio.
+                  Da tutto questo cammino porto con me una convinzione che guida ancora oggi il mio
+                  lavoro: ognuno di noi possiede, dentro di s&eacute;, le risorse per ritrovare il proprio
+                  equilibrio &mdash; a patto di essere accolto senza giudizio.
                 </p>
               </div>
             </Reveal>
@@ -99,10 +114,10 @@ export function About() {
               />
               <div className="px-2 pb-3 sm:pb-0">
                 <span className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.2em] text-primary">
-                  <Newspaper className="h-4 w-4" /> Come vista su
+                  <Newspaper className="h-4 w-4" /> Pubblicazioni scientifiche
                 </span>
                 <h3 className="mt-3 font-serif text-2xl md:text-3xl text-foreground">
-                  Rivista Salute33 &mdash; Rubrica di Psicologia
+                  Rivista Salute 33 &mdash; Rivista di Divulgazione Scientifica
                 </h3>
                 <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
                   &ldquo;Lo stress non &egrave; solo nella testa: come impatta davvero sulla nostra
