@@ -18,8 +18,8 @@ import {
 import { toast } from 'sonner'
 
 const DAYS = [
-  { k: '1', label: 'Luned\u00ec' }, { k: '2', label: 'Marted\u00ec' }, { k: '3', label: 'Mercoled\u00ec' },
-  { k: '4', label: 'Gioved\u00ec' }, { k: '5', label: 'Venerd\u00ec' }, { k: '6', label: 'Sabato' }, { k: '0', label: 'Domenica' },
+  { k: '1', label: 'Lunedì' }, { k: '2', label: 'Martedì' }, { k: '3', label: 'Mercoledì' },
+  { k: '4', label: 'Giovedì' }, { k: '5', label: 'Venerdì' }, { k: '6', label: 'Sabato' }, { k: '0', label: 'Domenica' },
 ]
 
 const STATUS_MAP = {
@@ -72,7 +72,7 @@ export default function Admin() {
             <Label htmlFor="pw">Password</Label>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input id="pw" type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="pl-9" placeholder="\u2022\u2022\u2022\u2022\u2022\u2022" />
+              <Input id="pw" type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="pl-9" placeholder="••••••" />
             </div>
           </div>
           <Button type="submit" disabled={loggingIn} className="mt-6 w-full rounded-full">
@@ -117,7 +117,7 @@ function Dashboard({ token, onLogout }) {
         <Tabs defaultValue="appointments">
           <TabsList className="mb-6 flex-wrap">
             <TabsTrigger value="appointments"><CalendarDays className="mr-1.5 h-4 w-4" /> Appuntamenti</TabsTrigger>
-            <TabsTrigger value="availability"><Settings2 className="mr-1.5 h-4 w-4" /> Disponibilit\u00e0</TabsTrigger>
+            <TabsTrigger value="availability"><Settings2 className="mr-1.5 h-4 w-4" /> Disponibilità</TabsTrigger>
             <TabsTrigger value="blog"><FileText className="mr-1.5 h-4 w-4" /> Blog</TabsTrigger>
             <TabsTrigger value="messages"><Inbox className="mr-1.5 h-4 w-4" /> Messaggi</TabsTrigger>
           </TabsList>
@@ -164,10 +164,10 @@ function Appointments({ api }) {
               <Badge variant="outline" className={STATUS_MAP[a.status]?.className}>{STATUS_MAP[a.status]?.label || a.status}</Badge>
             </div>
             <p className="mt-1 text-sm text-muted-foreground">
-              <CalendarDays className="mr-1 inline h-3.5 w-3.5" />{a.date} \u00b7 <Clock3 className="mr-1 inline h-3.5 w-3.5" />{a.time} \u00b7 {a.service} \u00b7 {a.modality}
+              <CalendarDays className="mr-1 inline h-3.5 w-3.5" />{a.date} · <Clock3 className="mr-1 inline h-3.5 w-3.5" />{a.time} · {a.service} · {a.modality}
             </p>
-            <p className="mt-0.5 text-xs text-muted-foreground">{a.email}{a.phone ? ` \u00b7 ${a.phone}` : ''}</p>
-            {a.message && <p className="mt-1 text-xs italic text-muted-foreground">\u201c{a.message}\u201d</p>}
+            <p className="mt-0.5 text-xs text-muted-foreground">{a.email}{a.phone ? ` · ${a.phone}` : ''}</p>
+            {a.message && <p className="mt-1 text-xs italic text-muted-foreground">“{a.message}”</p>}
           </div>
           <div className="flex shrink-0 items-center gap-2">
             <Select value={a.status} onValueChange={(v) => setStatus(a.id, v)}>
@@ -203,7 +203,7 @@ function Availability({ api }) {
   const save = async () => {
     setSaving(true)
     await api('/availability', { method: 'PUT', body: JSON.stringify({ days }) })
-    toast.success('Disponibilit\u00e0 salvata'); setSaving(false)
+    toast.success('Disponibilità salvata'); setSaving(false)
   }
 
   if (!days) return <Loading />
@@ -233,7 +233,7 @@ function Availability({ api }) {
         })}
       </div>
       <Button onClick={save} disabled={saving} className="mt-6 rounded-full">
-        {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />} Salva disponibilit\u00e0
+        {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />} Salva disponibilità
       </Button>
     </div>
   )
@@ -290,7 +290,7 @@ function BlogAdmin({ api }) {
             <div className="grid gap-2"><Label>Data di pubblicazione</Label><Input type="date" value={form.date} onChange={(e) => update('date', e.target.value)} /></div>
             <div className="grid gap-2"><Label>Tempo di lettura (min)</Label><Input type="number" value={form.readingTime} onChange={(e) => update('readingTime', Number(e.target.value))} /></div>
           </div>
-          <div className="grid gap-2"><Label>Immagine di copertina (URL)</Label><Input value={form.cover} onChange={(e) => update('cover', e.target.value)} placeholder="https://\u2026" /></div>
+          <div className="grid gap-2"><Label>Immagine di copertina (URL)</Label><Input value={form.cover} onChange={(e) => update('cover', e.target.value)} placeholder="https://…" /></div>
           <div className="grid gap-2">
             <Label>Contenuto dell&rsquo;articolo</Label>
             <Textarea rows={14} value={form.content} onChange={(e) => update('content', e.target.value)} placeholder={"Scrivi qui il testo.\n\nUsa una riga vuota per separare i paragrafi.\n\n## Titolo di sezione (H2)\n### Sottosezione (H3)\n\n**testo in grassetto**\n\nInserisci un'immagine con:\n![descrizione](https://url-immagine.jpg)"} className="font-mono text-sm" />
@@ -317,7 +317,7 @@ function BlogAdmin({ api }) {
                 <p className="truncate font-serif text-base text-foreground">{p.title}</p>
                 {!p.published && <Badge variant="outline" className="border-amber-200 bg-amber-50 text-amber-700">Bozza</Badge>}
               </div>
-              <p className="text-xs text-muted-foreground">{p.category} \u00b7 {p.readingTime} min</p>
+              <p className="text-xs text-muted-foreground">{p.category} · {p.readingTime} min</p>
             </div>
             <div className="flex shrink-0 items-center gap-1">
               <Button variant="ghost" size="icon" onClick={() => togglePub(p)} title="Pubblica/Bozza">{p.published ? <Check className="h-4 w-4 text-green-600" /> : <X className="h-4 w-4 text-amber-600" />}</Button>
@@ -357,7 +357,7 @@ function Messages({ api }) {
 }
 
 const Loading = () => (
-  <div className="flex items-center justify-center py-20 text-muted-foreground"><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Carico\u2026</div>
+  <div className="flex items-center justify-center py-20 text-muted-foreground"><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Carico…</div>
 )
 const Empty = ({ text }) => (
   <div className="rounded-2xl border border-dashed border-border py-16 text-center text-muted-foreground">{text}</div>

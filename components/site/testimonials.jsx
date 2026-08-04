@@ -17,7 +17,7 @@ export function Testimonials() {
         <Reveal>
           <div className="mt-14 mx-auto max-w-4xl">
             {/* Contenitore predisposto per il widget delle Recensioni Google.
-                Nessuna recensione viene mostrata finch\u00e9 il widget non sar\u00e0 collegato. */}
+                Nessuna recensione viene mostrata finché il widget non sarà collegato. */}
             <div
               id="google-reviews-widget"
               data-google-reviews-placeholder="true"

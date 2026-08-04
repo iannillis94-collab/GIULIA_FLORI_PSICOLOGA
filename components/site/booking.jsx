@@ -104,7 +104,7 @@ export function Booking() {
         <SectionHeading
           eyebrow="Richiesta colloquio"
           title="Richiedi un primo colloquio"
-          subtitle="Compila il modulo sottostante per inviare una richiesta di appuntamento. Ti ricontatter\u00f2 personalmente nel pi\u00f9 breve tempo possibile per concordare insieme data, orario e modalit\u00e0 del colloquio."
+          subtitle="Compila il modulo sottostante per inviare una richiesta di appuntamento. Ti ricontatterò personalmente nel più breve tempo possibile per concordare insieme data, orario e modalità del colloquio."
         />
 
         <Reveal>
@@ -133,7 +133,7 @@ export function Booking() {
                     </span>
                   </div>
                   <p className="mt-5 max-w-md text-sm text-muted-foreground">
-                    Ti contatter\u00f2 all\u2019indirizzo <span className="text-foreground">{done.email}</span> per confermare l\u2019appuntamento. A presto.
+                    Ti contatterò all’indirizzo <span className="text-foreground">{done.email}</span> per confermare l’appuntamento. A presto.
                   </p>
                   <Button onClick={reset} variant="outline" className="mt-8 rounded-full">
                     Prenota un altro colloquio
@@ -164,7 +164,7 @@ export function Booking() {
                       {!date && <p className="mt-2 text-sm text-muted-foreground">Seleziona prima un giorno dal calendario.</p>}
                       {date && loadingSlots && (
                         <div className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
-                          <Loader2 className="h-4 w-4 animate-spin" /> Carico gli orari\u2026
+                          <Loader2 className="h-4 w-4 animate-spin" /> Carico gli orari…
                         </div>
                       )}
                       {date && !loadingSlots && slots.length === 0 && (
@@ -278,7 +278,7 @@ export function Booking() {
                       </div>
 
                       <Button onClick={submit} disabled={submitting} className="w-full rounded-full py-6 text-base shadow-soft">
-                        {submitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Invio in corso\u2026</> : <>Invia richiesta <Send className="ml-1.5 h-4 w-4" /></>}
+                        {submitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Invio in corso…</> : <>Invia richiesta <Send className="ml-1.5 h-4 w-4" /></>}
                       </Button>
                       <p className="text-center text-xs leading-relaxed text-muted-foreground">
                         Inviando il modulo invii una <span className="font-medium text-foreground">richiesta di contatto</span>: non &egrave; una prenotazione confermata. Ti ricontatter&ograve; personalmente per concordare i dettagli.
