@@ -76,7 +76,11 @@ export function Contact() {
 
             <div className="mt-4 rounded-2xl border border-border/60 bg-card p-5 shadow-soft">
               <p className="flex items-center gap-2 text-sm font-medium text-foreground"><Clock className="h-4 w-4 text-primary" /> Orari</p>
-              <p className="mt-2 text-sm text-muted-foreground">Lunedì – Venerdì · 9:00 – 19:00 · su appuntamento</p>
+              <div className="mt-2 space-y-1 text-sm text-muted-foreground">
+                <p className="flex justify-between gap-4"><span>Lunedì – Venerdì</span><span className="text-foreground/80">9:00 – 18:00 · su appuntamento</span></p>
+                <p className="flex justify-between gap-4"><span>Sabato</span><span className="text-foreground/80">9:00 – 16:00 · su appuntamento</span></p>
+                <p className="flex justify-between gap-4"><span>Domenica</span><span className="text-foreground/80">Chiuso</span></p>
+              </div>
               <div className="mt-4 flex gap-3">
                 <a href={CONTACT.instagram} target="_blank" rel="noopener noreferrer" className="grid h-10 w-10 place-items-center rounded-xl bg-secondary text-foreground transition-colors hover:bg-primary hover:text-primary-foreground"><Instagram className="h-5 w-5" /></a>
                 <a href={CONTACT.linkedin} target="_blank" rel="noopener noreferrer" className="grid h-10 w-10 place-items-center rounded-xl bg-secondary text-foreground transition-colors hover:bg-primary hover:text-primary-foreground"><Linkedin className="h-5 w-5" /></a>
