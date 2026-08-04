@@ -28,7 +28,7 @@ const STATUS_MAP = {
   cancelled: { label: 'Annullato', className: 'bg-red-100 text-red-700 border-red-200' },
 }
 
-const EMPTY_POST = { title: '', category: 'Psicologia', excerpt: '', cover: '', readingTime: 4, content: '', published: true }
+const EMPTY_POST = { title: '', subtitle: '', category: 'Psicologia', excerpt: '', cover: '', readingTime: 4, date: new Date().toISOString().slice(0, 10), content: '', published: true }
 
 export default function Admin() {
   const [token, setToken] = useState(null)
@@ -277,7 +277,8 @@ function BlogAdmin({ api }) {
         </div>
         <div className="mt-5 grid gap-4">
           <div className="grid gap-2"><Label>Titolo</Label><Input value={form.title} onChange={(e) => update('title', e.target.value)} /></div>
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-2"><Label>Sottotitolo</Label><Input value={form.subtitle} onChange={(e) => update('subtitle', e.target.value)} placeholder="Breve frase introduttiva (mostrata anche nell'anteprima)" /></div>
+          <div className="grid gap-4 sm:grid-cols-3">
             <div className="grid gap-2"><Label>Categoria</Label>
               <Select value={form.category} onValueChange={(v) => update('category', v)}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
@@ -286,11 +287,15 @@ function BlogAdmin({ api }) {
                 </SelectContent>
               </Select>
             </div>
+            <div className="grid gap-2"><Label>Data di pubblicazione</Label><Input type="date" value={form.date} onChange={(e) => update('date', e.target.value)} /></div>
             <div className="grid gap-2"><Label>Tempo di lettura (min)</Label><Input type="number" value={form.readingTime} onChange={(e) => update('readingTime', Number(e.target.value))} /></div>
           </div>
           <div className="grid gap-2"><Label>Immagine di copertina (URL)</Label><Input value={form.cover} onChange={(e) => update('cover', e.target.value)} placeholder="https://\u2026" /></div>
-          <div className="grid gap-2"><Label>Estratto</Label><Textarea rows={2} value={form.excerpt} onChange={(e) => update('excerpt', e.target.value)} /></div>
-          <div className="grid gap-2"><Label>Contenuto (paragrafi separati da riga vuota)</Label><Textarea rows={10} value={form.content} onChange={(e) => update('content', e.target.value)} /></div>
+          <div className="grid gap-2">
+            <Label>Contenuto dell&rsquo;articolo</Label>
+            <Textarea rows={14} value={form.content} onChange={(e) => update('content', e.target.value)} placeholder={"Scrivi qui il testo.\n\nUsa una riga vuota per separare i paragrafi.\n\n## Titolo di sezione (H2)\n### Sottosezione (H3)\n\n**testo in grassetto**\n\nInserisci un'immagine con:\n![descrizione](https://url-immagine.jpg)"} className="font-mono text-sm" />
+            <p className="text-xs text-muted-foreground">Formattazione: <code>## </code> per titoli H2, <code>### </code> per H3, <code>**grassetto**</code>, <code>![alt](url)</code> per le immagini. Riga vuota = nuovo paragrafo.</p>
+          </div>
           <div className="flex items-center gap-2"><Switch checked={form.published} onCheckedChange={(v) => update('published', v)} /><Label>Pubblicato</Label></div>
           <Button onClick={save} disabled={saving} className="w-fit rounded-full">
             {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />} Salva articolo

@@ -5,7 +5,7 @@ import { format } from 'date-fns'
 import { it } from 'date-fns/locale'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  CalendarCheck, Clock, Loader2, CheckCircle2, MapPin, Video, ArrowRight,
+  CalendarCheck, Clock, Loader2, CheckCircle2, MapPin, Video, ArrowRight, Check, Send,
 } from 'lucide-react'
 import { Calendar } from '@/components/ui/calendar'
 import { Button } from '@/components/ui/button'
@@ -31,7 +31,7 @@ export function Booking() {
 
   const [form, setForm] = useState({
     name: '', email: '', phone: '', service: SERVICES[0].title,
-    modality: 'In studio', message: '', consent: false, website: '',
+    modality: 'Online', message: '', consent: false, website: '',
   })
 
   useEffect(() => {
@@ -102,9 +102,9 @@ export function Booking() {
     <section id="prenota" className="py-24 md:py-32 bg-secondary/30">
       <div className="container">
         <SectionHeading
-          eyebrow="Prenotazione online"
-          title="Prenota il tuo primo colloquio"
-          subtitle="Scegli il giorno e l\u2019orario che preferisci. Riceverai una conferma e ti ricontatter\u00f2 personalmente."
+          eyebrow="Richiesta colloquio"
+          title="Richiedi un primo colloquio"
+          subtitle="Compila il modulo sottostante per inviare una richiesta di appuntamento. Ti ricontatter\u00f2 personalmente nel pi\u00f9 breve tempo possibile per concordare insieme data, orario e modalit\u00e0 del colloquio."
         />
 
         <Reveal>
@@ -143,7 +143,10 @@ export function Booking() {
                 <motion.div key="form" className="grid lg:grid-cols-2">
                   {/* Left: calendar + slots */}
                   <div className="border-b border-border/60 p-6 md:p-8 lg:border-b-0 lg:border-r">
-                    <p className="font-serif text-lg text-foreground">1. Scegli data e orario</p>
+                    <div className="flex items-center gap-3">
+                      <span className="grid h-8 w-8 place-items-center rounded-full bg-primary/10 text-sm font-semibold text-primary">1</span>
+                      <p className="font-serif text-lg text-foreground">Scegli data e orario</p>
+                    </div>
                     <div className="mt-4 flex justify-center rounded-2xl bg-background/60 p-2">
                       <Calendar
                         mode="single"
@@ -192,8 +195,11 @@ export function Booking() {
 
                   {/* Right: form */}
                   <div className="p-6 md:p-8">
-                    <p className="font-serif text-lg text-foreground">2. I tuoi dati</p>
-                    <div className="mt-4 space-y-4">
+                    <div className="flex items-center gap-3">
+                      <span className="grid h-8 w-8 place-items-center rounded-full bg-primary/10 text-sm font-semibold text-primary">2</span>
+                      <p className="font-serif text-lg text-foreground">I tuoi dati</p>
+                    </div>
+                    <div className="mt-5 space-y-5">
                       <div className="grid gap-2">
                         <Label>Servizio</Label>
                         <Select value={form.service} onValueChange={(v) => update('service', v)}>
@@ -206,25 +212,39 @@ export function Booking() {
                         </Select>
                       </div>
 
-                      <div className="grid gap-2">
-                        <Label>Modalit\u00e0</Label>
-                        <div className="grid grid-cols-2 gap-2">
-                          {[{ v: 'In studio', icon: MapPin }, { v: 'Online', icon: Video }].map((m) => {
-                            const Icon = m.icon
-                            return (
-                              <button
-                                key={m.v}
-                                onClick={() => update('modality', m.v)}
-                                className={`flex items-center justify-center gap-2 rounded-xl border px-3 py-2.5 text-sm transition-all ${
-                                  form.modality === m.v
-                                    ? 'border-primary bg-primary/10 text-foreground'
-                                    : 'border-border bg-background hover:border-primary/40'
-                                }`}
-                              >
-                                <Icon className="h-4 w-4 text-primary" /> {m.v}
-                              </button>
-                            )
-                          })}
+                      <div className="grid gap-2.5">
+                        <Label>Modalit&agrave; del colloquio</Label>
+                        <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+                          {/* Online - selezionabile */}
+                          <button
+                            type="button"
+                            onClick={() => update('modality', 'Online')}
+                            className={`flex items-center gap-3 rounded-2xl border p-3.5 text-left transition-all ${
+                              form.modality === 'Online'
+                                ? 'border-primary bg-primary/10 ring-1 ring-primary/30'
+                                : 'border-border bg-background hover:border-primary/40'
+                            }`}
+                          >
+                            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary"><Video className="h-4.5 w-4.5" /></span>
+                            <span className="min-w-0 flex-1">
+                              <span className="block text-sm font-medium text-foreground">Consulenza online</span>
+                              <span className="block text-xs text-muted-foreground">In videochiamata, ovunque tu sia</span>
+                            </span>
+                            {form.modality === 'Online' && <Check className="h-4 w-4 shrink-0 text-primary" />}
+                          </button>
+
+                          {/* In presenza - disabilitata / non selezionabile */}
+                          <div
+                            aria-disabled="true"
+                            title="Attualmente non disponibile"
+                            className="flex cursor-not-allowed items-center gap-3 rounded-2xl border border-border bg-muted/40 p-3.5 text-left opacity-70"
+                          >
+                            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-muted text-muted-foreground"><MapPin className="h-4.5 w-4.5" /></span>
+                            <span className="min-w-0 flex-1">
+                              <span className="block text-sm font-medium text-muted-foreground">Consulenza in presenza</span>
+                              <span className="mt-1 inline-block rounded-full bg-secondary/80 px-2 py-0.5 text-[0.65rem] font-medium text-muted-foreground">Disponibile prossimamente</span>
+                            </span>
+                          </div>
                         </div>
                       </div>
 
@@ -258,8 +278,11 @@ export function Booking() {
                       </div>
 
                       <Button onClick={submit} disabled={submitting} className="w-full rounded-full py-6 text-base shadow-soft">
-                        {submitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Invio in corso\u2026</> : <>Conferma prenotazione <ArrowRight className="ml-1 h-4 w-4" /></>}
+                        {submitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Invio in corso\u2026</> : <>Invia richiesta <Send className="ml-1.5 h-4 w-4" /></>}
                       </Button>
+                      <p className="text-center text-xs leading-relaxed text-muted-foreground">
+                        Inviando il modulo invii una <span className="font-medium text-foreground">richiesta di contatto</span>: non &egrave; una prenotazione confermata. Ti ricontatter&ograve; personalmente per concordare i dettagli.
+                      </p>
                     </div>
                   </div>
                 </motion.div>

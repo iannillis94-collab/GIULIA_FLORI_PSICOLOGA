@@ -4,14 +4,23 @@ import { NextResponse } from 'next/server'
 
 let client
 let db
+let connecting
 
 async function connectToMongo() {
-  if (!client) {
-    client = new MongoClient(process.env.MONGO_URL)
-    await client.connect()
-    db = client.db(process.env.DB_NAME)
+  if (db) return db
+  if (!connecting) {
+    connecting = (async () => {
+      const c = new MongoClient(process.env.MONGO_URL)
+      await c.connect()
+      client = c
+      db = c.db(process.env.DB_NAME)
+      return db
+    })().catch((e) => {
+      connecting = null // allow retry on next request
+      throw e
+    })
   }
-  return db
+  return connecting
 }
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'giulia2025'
@@ -150,21 +159,21 @@ const SEED_POSTS = [
 ]
 
 async function ensureSeed(db) {
-  const availCol = db.collection('settings')
-  const existing = await availCol.findOne({ id: 'availability' })
-  if (!existing) await availCol.insertOne(DEFAULT_AVAILABILITY)
+  const settingsCol = db.collection('settings')
+  const existing = await settingsCol.findOne({ id: 'availability' })
+  if (!existing) await settingsCol.insertOne(DEFAULT_AVAILABILITY)
 
-  const blogCol = db.collection('blog_posts')
-  const count = await blogCol.countDocuments()
-  if (count === 0) {
-    const now = Date.now()
-    const docs = SEED_POSTS.map((p, i) => ({
-      id: uuidv4(),
-      ...p,
-      published: true,
-      createdAt: new Date(now - i * 86400000),
-    }))
-    await blogCol.insertMany(docs)
+  // One-time cleanup: remove previously auto-seeded demo blog posts.
+  // Articles are now managed manually from the admin dashboard.
+  const mig = await settingsCol.findOne({ id: 'migrations' })
+  if (!mig || !mig.removedDemoBlog) {
+    const demoSlugs = SEED_POSTS.map((p) => p.slug)
+    await db.collection('blog_posts').deleteMany({ slug: { $in: demoSlugs } })
+    await settingsCol.updateOne(
+      { id: 'migrations' },
+      { $set: { id: 'migrations', removedDemoBlog: true } },
+      { upsert: true }
+    )
   }
 }
 
@@ -285,6 +294,13 @@ async function handleRoute(request, { params }) {
         .toArray()
       return json(posts.map(({ _id, ...r }) => r))
     }
+    // Public: single post by slug (used by the dedicated article page)
+    if (path[0] === 'blog' && path[1] && method === 'GET') {
+      const doc = await db.collection('blog_posts').findOne({ slug: path[1] })
+      if (!doc || (!doc.published && !isAdmin(request))) return json({ error: 'Articolo non trovato' }, 404)
+      const { _id, ...rest } = doc
+      return json(rest)
+    }
     if (route === '/blog' && method === 'POST') {
       if (!isAdmin(request)) return json({ error: 'Non autorizzato' }, 401)
       const body = await request.json()
@@ -296,10 +312,12 @@ async function handleRoute(request, { params }) {
         id: uuidv4(),
         slug: `${slug}-${Math.random().toString(36).slice(2, 6)}`,
         title: body.title,
+        subtitle: body.subtitle || '',
         category: body.category || 'Psicologia',
         excerpt: body.excerpt || '',
         cover: body.cover || img('https://images.unsplash.com/photo-1522075782449-e45a34f1ddfb'),
         readingTime: body.readingTime || 4,
+        date: body.date || new Date().toISOString().slice(0, 10),
         content: body.content || '',
         published: body.published !== false,
         createdAt: new Date(),
@@ -312,7 +330,7 @@ async function handleRoute(request, { params }) {
       if (!isAdmin(request)) return json({ error: 'Non autorizzato' }, 401)
       const body = await request.json()
       const update = {}
-      for (const k of ['title', 'category', 'excerpt', 'cover', 'readingTime', 'content', 'published']) {
+      for (const k of ['title', 'subtitle', 'category', 'excerpt', 'cover', 'readingTime', 'date', 'content', 'published']) {
         if (body[k] !== undefined) update[k] = body[k]
       }
       await db.collection('blog_posts').updateOne({ id: path[1] }, { $set: update })
