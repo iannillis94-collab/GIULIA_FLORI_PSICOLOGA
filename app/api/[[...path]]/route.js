@@ -47,16 +47,18 @@ function isAdmin(request) {
   return !!(token && token === ADMIN_TOKEN)
 }
 
+const WEEKDAY_SLOTS = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00']
+const SATURDAY_SLOTS = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00']
 const DEFAULT_AVAILABILITY = {
   id: 'availability',
   // 0 = Domenica ... 6 = Sabato
   days: {
-    '1': { enabled: true, slots: ['09:00', '10:00', '11:00', '15:00', '16:00', '17:00'] },
-    '2': { enabled: true, slots: ['09:00', '10:00', '11:00', '15:00', '16:00', '17:00'] },
-    '3': { enabled: true, slots: ['09:00', '10:00', '11:00', '15:00', '16:00', '17:00'] },
-    '4': { enabled: true, slots: ['09:00', '10:00', '11:00', '15:00', '16:00', '17:00'] },
-    '5': { enabled: true, slots: ['09:00', '10:00', '11:00', '15:00'] },
-    '6': { enabled: false, slots: [] },
+    '1': { enabled: true, slots: WEEKDAY_SLOTS },
+    '2': { enabled: true, slots: WEEKDAY_SLOTS },
+    '3': { enabled: true, slots: WEEKDAY_SLOTS },
+    '4': { enabled: true, slots: WEEKDAY_SLOTS },
+    '5': { enabled: true, slots: WEEKDAY_SLOTS },
+    '6': { enabled: true, slots: SATURDAY_SLOTS },
     '0': { enabled: false, slots: [] },
   },
 }
@@ -175,6 +177,19 @@ async function ensureSeed(db) {
       { upsert: true }
     )
   }
+  // One-time: align availability with the studio opening hours.
+  if (!mig || !mig.availabilityV2) {
+    await settingsCol.updateOne(
+      { id: 'availability' },
+      { $set: { id: 'availability', days: DEFAULT_AVAILABILITY.days } },
+      { upsert: true }
+    )
+    await settingsCol.updateOne(
+      { id: 'migrations' },
+      { $set: { id: 'migrations', availabilityV2: true } },
+      { upsert: true }
+    )
+  }
 }
 
 async function handleRoute(request, { params }) {
@@ -250,8 +265,20 @@ async function handleRoute(request, { params }) {
         createdAt: new Date(),
       }
       await db.collection('appointments').insertOne(appt)
+      let emailSent = false
+      try {
+        const { sendRequestEmail } = await import('@/lib/email')
+        const r = await sendRequestEmail({
+          type: 'booking', name: appt.name, email: appt.email, phone: appt.phone,
+          modality: appt.modality, service: appt.service, date: appt.date, time: appt.time, message: appt.message,
+        })
+        emailSent = !!(r && (r.id || r.skipped))
+        if (r?.id) await db.collection('appointments').updateOne({ id: appt.id }, { $set: { emailId: r.id } })
+      } catch (e) {
+        console.error('Email error (booking):', e?.message)
+      }
       const { _id, ...rest } = appt
-      return json({ ok: true, appointment: rest })
+      return json({ ok: true, emailSent, appointment: rest })
     }
 
     if (route === '/appointments' && method === 'GET') {
@@ -363,6 +390,12 @@ async function handleRoute(request, { params }) {
         read: false,
       }
       await db.collection('contact_messages').insertOne(msg)
+      try {
+        const { sendRequestEmail } = await import('@/lib/email')
+        await sendRequestEmail({ type: 'contact', name: msg.name, email: msg.email, phone: msg.phone, message: msg.message })
+      } catch (e) {
+        console.error('Email error (contact):', e?.message)
+      }
       return json({ ok: true })
     }
     if (route === '/contact' && method === 'GET') {

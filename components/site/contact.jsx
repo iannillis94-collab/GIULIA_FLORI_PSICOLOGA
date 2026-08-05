@@ -26,10 +26,10 @@ export function Contact() {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form),
       })
       const data = await res.json()
-      if (!res.ok) { toast.error(data.error || 'Errore'); return }
-      toast.success('Messaggio inviato! Ti risponderò al più presto.')
+      if (!res.ok) { toast.error(data.error || 'Errore durante l’invio del messaggio'); return }
+      toast.success('Grazie! La tua richiesta è stata inviata con successo. Ti ricontatterò al più presto.')
       setForm({ name: '', email: '', phone: '', message: '', consent: false, website: '' })
-    } catch { toast.error('Errore di connessione') } finally { setSubmitting(false) }
+    } catch { toast.error('Si è verificato un errore durante l’invio. Riprova, oppure scrivimi via email o WhatsApp.') } finally { setSubmitting(false) }
   }
 
   const items = [

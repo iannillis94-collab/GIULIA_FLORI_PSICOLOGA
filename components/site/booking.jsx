@@ -83,11 +83,11 @@ export function Booking() {
         body: JSON.stringify({ ...form, date: format(date, 'yyyy-MM-dd'), time }),
       })
       const data = await res.json()
-      if (!res.ok) { toast.error(data.error || 'Errore durante la prenotazione'); return }
+      if (!res.ok) { toast.error(data.error || 'Errore durante l\u2019invio della richiesta'); return }
       setDone({ ...form, date: format(date, 'EEEE d MMMM yyyy', { locale: it }), time })
-      toast.success('Richiesta di prenotazione inviata!')
+      toast.success('Grazie! La tua richiesta \u00e8 stata inviata con successo. Ti ricontatter\u00f2 al pi\u00f9 presto.')
     } catch (e) {
-      toast.error('Errore di connessione. Riprova.')
+      toast.error('Si \u00e8 verificato un errore durante l\u2019invio. Riprova, oppure scrivimi via email o WhatsApp.')
     } finally {
       setSubmitting(false)
     }
