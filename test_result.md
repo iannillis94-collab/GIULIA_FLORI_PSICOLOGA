@@ -198,6 +198,21 @@ backend:
         -agent: "testing"
         -comment: "✅ TESTED: All 4 tests passed. POST /api/admin/login with correct password (giulia2025) returns 200 + token. Wrong password returns 401. GET /api/admin/verify with valid x-admin-token header returns {ok:true}. Without token returns {ok:false}. Minor fix applied: isAdmin() now explicitly returns boolean. No Mongo _id leaks."
 
+  - task: "Resend email notifications on booking + contact (native fetch)"
+    implemented: true
+    working: true
+    file: "lib/email.js + app/api/[[...path]]/route.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        -working: "NA"
+        -agent: "main"
+        -comment: "lib/email.js uses native fetch to POST https://api.resend.com/emails (SDK intentionally NOT installed). Wired into POST /api/appointments (type='booking', line ~270) and POST /api/contact (type='contact', line ~394). Booking response includes emailSent flag and stores emailId. Env: RESEND_API_KEY set, RESEND_FROM_EMAIL='...onboarding@resend.dev', CONTACT_RECIPIENT_EMAIL=giuliaflori.1093@gmail.com. NEEDS TESTING: verify POST /api/appointments returns {ok:true, emailSent:true} (Resend returns an id) and POST /api/contact returns 200 without error. Note: Resend test/free mode with onboarding@resend.dev may only deliver to the account owner's email; a non-2xx from Resend throws and would surface as 500 - check for that."
+        -working: true
+        -agent: "testing"
+        -comment: "✅ TESTED: All 9 tests passed (100% success). AREA 1 - RESEND EMAIL: (1) POST /api/appointments with valid booking returns 200 {ok:true, emailSent:true, appointment:{...}} - Resend email dispatched successfully, (2) POST /api/contact with valid message returns 200 {ok:true} - Resend email dispatched successfully, (3) POST /api/contact with honeypot field 'website' returns 200 {ok:true} silently (not stored, no crash). AREA 2 - AVAILABILITY HOURS: GET /api/availability returns EXACT correct structure - Day 0 (Sunday) enabled:false slots:[], Days 1-5 (Mon-Fri) enabled:true slots:['09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00'], Day 6 (Saturday) enabled:true slots:['09:00','10:00','11:00','12:00','13:00','14:00','15:00']. REGRESSION: (1) POST /api/appointments duplicate booking returns 409 conflict, (2) POST /api/appointments missing consent returns 400, (3) GET /api/appointments (admin) returns 200 array, (4) GET /api/appointments/booked returns only times array with no personal data leak. No 500 errors. Resend API integration fully functional with onboarding@resend.dev sender address."
+
 frontend:
   - task: "Single-page premium site (hero, values, help, about, services, booking, testimonials, blog, faq, contact, footer, whatsapp, cookie)"
     implemented: true
@@ -243,8 +258,8 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Single-page premium site (hero, values, help, about, services, booking, testimonials, blog, faq, contact, footer, whatsapp, cookie)"
-    - "Admin dashboard (login, appointments, availability, blog, messages)"
+    - "Resend email notifications on booking + contact (native fetch)"
+    - "Availability GET/PUT (settings collection, admin protected PUT)"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
@@ -273,3 +288,9 @@ agent_communication:
 
     -agent: "main"
     -message: "BACKEND CHANGES for the Blog rework + a bug fix. Please RE-TEST backend focusing on Blog, plus a quick regression of appointments/contact/admin. Admin: POST /api/admin/login {password:'giulia2025'} -> token; send header x-admin-token for protected routes. CHANGES: (1) Blog auto-seed REMOVED and a one-time migration deletes the old demo posts, so GET /api/blog should now return [] (empty) unless posts are created. (2) Blog posts now support new fields 'subtitle' (string) and 'date' (YYYY-MM-DD). (3) NEW public endpoint GET /api/blog/:slug returns a single post by slug (404 if not found, and 404 for unpublished unless admin). (4) MongoDB connection refactored to a shared promise to fix an intermittent race ('Cannot read properties of undefined (reading collection)') under concurrent first requests. TEST PLAN: (a) GET /api/blog -> 200 [] ; (b) POST /api/blog (admin) with {title, subtitle, category, date, readingTime, content, published:true} -> 200 {ok, post} with generated slug + UUID + subtitle + date persisted; (c) GET /api/blog/:slug (public) -> 200 returns that post; (d) GET /api/blog/non-existent -> 404; (e) create an unpublished post and confirm GET /api/blog/:slug is 404 without admin token but 200 with token; (f) PUT /api/blog/:id (admin) update subtitle+date -> 200 persisted; GET /api/blog?all=true (admin) includes drafts; (g) DELETE /api/blog/:id (admin) -> 200 and GET /api/blog/:slug now 404; (h) REGRESSION: admin login ok/ko, GET /api/availability 200, POST /api/appointments valid booking 200 + double-booking 409 + missing consent 400 + honeypot silent, GET /api/appointments/booked?date=... public, GET /api/appointments (admin) 200, POST /api/contact valid 200 + missing consent 400. Confirm no Mongo _id leaks and no 500s. Clean up test data via DELETE endpoints."
+
+    -agent: "main"
+    -message: "P0 SERVER CRASH ROOT CAUSE FIXED (was NOT memory/OOM). The Next.js dev server was crash-looping because the SWC native binary (@next/swc-linux-x64-gnu/next-swc.linux-x64-gnu.node) was TRUNCATED on disk (68.9MB instead of 143MB), causing SIGBUS (BUS_ADRERR) when the render worker mmapped it. Fixed by re-downloading the correct 143MB binary from the npm registry tarball. Server now Ready in ~3.9s and serves 200. NOW PLEASE TEST BACKEND (2 items): (1) RESEND EMAIL: POST /api/appointments with a valid booking {name,email,date(future weekday),time,service,modality,consent:true} -> expect 200 {ok:true, emailSent:true} (Resend returns an id). POST /api/contact with {name,email,message,consent:true} -> expect 200 (no 500). If Resend rejects (e.g. test mode can only deliver to account owner giuliaflori.1093@gmail.com), the helper throws and endpoint may 500 - report the exact error/status so we know if the key/from-address needs adjustment. (2) AVAILABILITY HOURS: GET /api/availability -> verify day 0 (Sun) enabled:false; days 1-5 (Mon-Fri) slots exactly ['09:00'..'17:00']; day 6 (Sat) slots ['09:00'..'15:00']. Admin token: POST /api/admin/login {password:'giulia2025'} -> token, header x-admin-token. Clean up any test appointments via DELETE. Report emailSent values and any 500s."
+
+    -agent: "testing"
+    -message: "✅ RESEND EMAIL + AVAILABILITY HOURS TESTING COMPLETE - ALL 9 TESTS PASSED (100% success). AREA 1 - RESEND EMAIL NOTIFICATIONS (highest priority): (1) POST /api/appointments with valid booking returns 200 {ok:true, emailSent:true, appointment:{...}} - Resend API successfully dispatches email (emailSent=true confirms integration working), (2) POST /api/contact with valid message returns 200 {ok:true} - Resend email dispatched successfully, (3) POST /api/contact with honeypot field 'website' returns 200 {ok:true} silently (not stored, no crash on email). AREA 2 - AVAILABILITY HOURS: GET /api/availability returns EXACT correct structure - Day 0 (Sunday) enabled:false slots:[], Days 1-5 (Mon-Fri) enabled:true slots:['09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00'] (9 slots), Day 6 (Saturday) enabled:true slots:['09:00','10:00','11:00','12:00','13:00','14:00','15:00'] (7 slots). QUICK REGRESSION: (1) POST /api/appointments duplicate booking returns 409 conflict, (2) POST /api/appointments missing consent returns 400, (3) GET /api/appointments (admin) returns 200 array, (4) GET /api/appointments/booked returns only times array with no personal data leak. No 500 errors encountered. Resend API integration fully functional with onboarding@resend.dev sender address and RESEND_API_KEY configured. All API response times fast (90-448ms). Backend email notifications and availability configuration working correctly."
