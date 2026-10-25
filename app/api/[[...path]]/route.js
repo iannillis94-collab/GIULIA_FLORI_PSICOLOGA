@@ -253,17 +253,20 @@ async function handleRoute(request, { params }) {
       })
       if (clash) return json({ error: 'Questo orario è stato appena prenotato. Scegli un altro slot.' }, 409)
       const appt = {
-        id: uuidv4(),
-        name: body.name,
-        email: body.email,
-        phone: body.phone || '',
-        service: body.service,
-        modality: body.modality || 'In studio',
-        date: body.date,
-        time: body.time,
-        message: body.message || '',
-        status: 'pending',
-        createdAt: new Date(),
+  id: uuidv4(),
+  name: body.name,
+  email: body.email,
+  phone: body.phone || '',
+  service: body.service,
+  modality: body.modality || 'In studio',
+  date: body.date,
+  time: body.time,
+  message: body.message || '',
+  status: 'pending',
+  payment_status: 'unpaid',
+  payment_url: '',
+  stripe_session_id: '',
+  createdAt: new Date(),
       }
       await db.collection('appointments').insertOne(appt)
       let emailSent = false
