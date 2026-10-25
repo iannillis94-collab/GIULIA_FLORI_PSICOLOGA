@@ -199,6 +199,88 @@ async function handleRoute(request, { params }) {
   const method = request.method
 
   try {
+    // ---------- STRIPE WEBHOOK ----------
+    // Stripe deve ricevere il body originale per verificare la firma.
+    if (route === '/stripe/webhook' && method === 'POST') {
+      const stripe = getStripe()
+      const signature = request.headers.get('stripe-signature')
+      const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
+
+      if (!signature) {
+        return new NextResponse('Missing Stripe signature', { status: 400 })
+      }
+
+      if (!webhookSecret) {
+        console.error('STRIPE_WEBHOOK_SECRET non configurato')
+        return new NextResponse('Webhook secret not configured', { status: 500 })
+      }
+
+      const body = await request.text()
+
+      let event
+
+      try {
+        event = stripe.webhooks.constructEvent(
+          body,
+          signature,
+          webhookSecret
+        )
+      } catch (err) {
+        console.error('Stripe webhook signature error:', err.message)
+        return new NextResponse('Webhook signature verification failed', {
+          status: 400,
+        })
+      }
+
+      const db = await connectToMongo()
+
+      if (event.type === 'checkout.session.completed') {
+        const session = event.data.object
+        const appointmentId = session.metadata?.appointment_id
+
+        if (appointmentId) {
+          const appointment = await db.collection('appointments').findOne({
+            id: appointmentId,
+          })
+
+          if (appointment) {
+            await db.collection('appointments').updateOne(
+              { id: appointmentId },
+              {
+                $set: {
+                  payment_status: 'paid',
+                  status: 'confirmed',
+                  paidAt: new Date(),
+                },
+              }
+            )
+
+            // Invia email di conferma al cliente
+            try {
+              const { sendRequestEmail } = await import('@/lib/email')
+
+              await sendRequestEmail({
+                type: 'booking_confirmed',
+                name: appointment.name,
+                email: appointment.email,
+                service: appointment.service,
+                date: appointment.date,
+                time: appointment.time,
+                modality: appointment.modality,
+              })
+            } catch (e) {
+              console.error(
+                'Email error (booking confirmed):',
+                e?.message
+              )
+            }
+          }
+        }
+      }
+
+      return new NextResponse('OK', { status: 200 })
+    }
+
     const db = await connectToMongo()
     await ensureSeed(db)
 
