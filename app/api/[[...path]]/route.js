@@ -1,6 +1,7 @@
 import { MongoClient } from 'mongodb'
 import { v4 as uuidv4 } from 'uuid'
 import { NextResponse } from 'next/server'
+import { getStripe } from '@/lib/stripe'
 
 let client
 let db
