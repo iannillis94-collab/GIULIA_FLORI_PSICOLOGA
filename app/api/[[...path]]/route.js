@@ -285,6 +285,81 @@ async function handleRoute(request, { params }) {
       return json({ ok: true, emailSent, appointment: rest })
     }
 
+        // ---------- STRIPE CHECKOUT ----------
+    // Crea il pagamento Stripe per un appuntamento già confermato dall'admin
+    if (path[0] === 'appointments' && path[1] && path[2] === 'checkout' && method === 'POST') {
+      if (!isAdmin(request)) return json({ error: 'Non autorizzato' }, 401)
+
+      const appointmentId = path[1]
+
+      const appointment = await db.collection('appointments').findOne({
+        id: appointmentId,
+      })
+
+      if (!appointment) {
+        return json({ error: 'Appuntamento non trovato' }, 404)
+      }
+
+      if (appointment.status !== 'confirmed') {
+        return json({
+          error: 'L’appuntamento deve essere confermato prima di richiedere il pagamento.'
+        }, 400)
+      }
+
+      if (appointment.payment_status === 'paid') {
+        return json({ error: 'L’appuntamento risulta già pagato.' }, 400)
+      }
+
+      const stripe = getStripe()
+
+      const siteUrl =
+        process.env.NEXT_PUBLIC_SITE_URL ||
+        'https://www.giuliafloripsicologa.it'
+
+      const session = await stripe.checkout.sessions.create({
+        mode: 'payment',
+
+        customer_email: appointment.email,
+
+        line_items: [
+          {
+            price_data: {
+              currency: 'eur',
+              product_data: {
+                name: appointment.service || 'Colloquio psicologico',
+              },
+              unit_amount: 6000,
+            },
+            quantity: 1,
+          },
+        ],
+
+        metadata: {
+          appointment_id: appointment.id,
+        },
+
+        success_url: `${siteUrl}/appuntamento-confermato?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${siteUrl}/prenota`,
+      })
+
+      await db.collection('appointments').updateOne(
+        { id: appointment.id },
+        {
+          $set: {
+            payment_url: session.url,
+            stripe_session_id: session.id,
+            payment_status: 'pending',
+          },
+        }
+      )
+
+      return json({
+        ok: true,
+        payment_url: session.url,
+        session_id: session.id,
+      })
+    }
+    
     if (route === '/appointments' && method === 'GET') {
       if (!isAdmin(request)) return json({ error: 'Non autorizzato' }, 401)
       const appts = await db.collection('appointments')
